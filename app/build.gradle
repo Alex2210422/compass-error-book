@@ -1,0 +1,33 @@
+plugins { id 'com.android.application' }
+
+def runNo = (System.getenv('GITHUB_RUN_NUMBER') ?: '1') as int
+
+android {
+    namespace 'com.shytikov.compasserror'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'com.shytikov.compasserror'
+        minSdk 26
+        targetSdk 34
+        versionCode runNo
+        versionName "1.0.${runNo}"
+    }
+    signingConfigs {
+        release {
+            storeFile file('../keystore/release.p12')
+            storeType 'pkcs12'
+            storePassword System.getenv('KS_PASS') ?: 'CompassErrorBook-2026'
+            keyAlias 'compass'
+            keyPassword System.getenv('KS_PASS') ?: 'CompassErrorBook-2026'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
+
+dependencies { implementation 'androidx.webkit:webkit:1.11.0' }
